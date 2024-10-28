@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Récupération des données
-VILLE=$1
+VILLE=${1:-"Paris"}
 curl -s "wttr.in/$VILLE?format=v2" -o meteo_brute.txt
 
 #Récupération des témpératures
