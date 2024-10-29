@@ -12,6 +12,22 @@ curl -s "wttr.in/$VILLE?format=j1" -o meteo_brute.json
 # Extraction des données à l'aide de jq
 TEMP_ACTUELLE=$(jq -r '.current_condition[0].temp_C + "°C"' meteo_brute.json)
 TEMP_DEMAIN=$(jq -r '.weather[1].maxtempC + "°C"' meteo_brute.json)
+
+#Enregistrement dans meteo.txt
+echo "$OUTPUT" >> meteo.txt
+
+#Archivage de quotidien
+
+#Définir le nom du fichier d'archive avec la date
+FICHIER_HISTORIQUE="meteo_$(date '+%d%m%Y').txt"
+
+#Enregistrer la sortie dans le fichier d'archive journalier
+echo "$OUTPUT" >> "$FICHIER_HISTORIQUE"
+
+#Extraction des données à l'aide de jq
+TEMP_ACTUELLE=$(jq -r'.current_condition[0].temp_C + "°C"' meteo_brute.json)
+TEMP_DEMAIN=$(jq -r'.weather[1].maxtempC + "°C"'meteo_brute.json)
+
 VENT=$(jq -r '.current_condition[0].windspeedKmph + " km/h"' meteo_brute.json)
 HUMIDITE=$(jq -r '.current_condition[0].humidity + "%"' meteo_brute.json)
 VISIBILITE=$(jq -r '.current_condition[0].visibility + " km"' meteo_brute.json)
