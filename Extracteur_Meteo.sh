@@ -19,8 +19,17 @@ HEURE=$(date '+%H:%M' )
 OUTPUT="$DATE -  $HEURE - $VILLE : Température actuelle: $TEMP_ACTUELLE - Prévision: $TEMP_DEMAIN" - Vent: $VENT - Humidité: $HUMIDITE - Visibilité: $VISIBILITE"
 echo "$OUTPUT"
 
+
 #Enregistrement dans meteo.txt
 echo "$OUTPUT" >> meteo.txt
+
+#Archivage de quotidien
+
+#Définir le nom du fichier d'archive avec la date
+FICHIER_HISTORIQUE="meteo_$(date '+%d%m%Y').txt"
+
+#Enregistrer la sortie dans le fichier d'archive journalier
+echo "$OUTPUT" >> "$FICHIER_HISTORIQUE"
 
 #Extraction des données à l'aide de jq
 TEMP_ACTUELLE=$(jq -r'.current_condition[0].temp_C + "°C"' meteo_brute.json)
