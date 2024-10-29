@@ -2,7 +2,7 @@
 
 #Récupération des données
 VILLE=${1:-"Paris"}
-curl -s "wttr.in/$VILLE?format=v2" -o meteo_brute.txt
+curl -s "wttr.in/$VILLE?format=j1" -o meteo_brute.json
 
 #Récupération des témpératures
 TEMP_ACTUELLE=$(grep -oP '(?<=\+)\d+°C' meteo_brute.txt | head -n1)
@@ -16,9 +16,15 @@ echo "Temp de demain : $TEMP_DEMAIN"
 DATE=$(date '+%d-%m-%Y' )
 HEURE=$(date '+%H:%M' )
 
-OUTPUT="$DATE -  $HEURE - $VILLE : $TEMP_ACTUELLE - $TEMP_DEMAIN"
+OUTPUT="$DATE -  $HEURE - $VILLE : Température actuelle: $TEMP_ACTUELLE - Prévision: $TEMP_DEMAIN" - Vent: $VENT - Humidité: $HUMIDITE - Visibilité: $VISIBILITE"
 echo "$OUTPUT"
 
 #Enregistrement dans meteo.txt
 echo "$OUTPUT" >> meteo.txt
 
+#Extraction des données à l'aide de jq
+TEMP_ACTUELLE=$(jq -r'.current_condition[0].temp_C + "°C"' meteo_brute.json)
+TEMP_DEMAIN=$(jq -r'.weather[1].maxtempC + "°C"'meteo_brute.json)
+VENT=$(jq -r '.current_condition[0].windspeedKmph + " km/h"' meteo_brute.json)
+HUMIDITE=$(jq -r '.current_condition[0].humidity + "%"' meteo_brute.json)has context menu
+VISIBILITE=$(jq -r'.current_condition[0].visibility + " km"'meteo_brute.json)
