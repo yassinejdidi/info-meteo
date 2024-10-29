@@ -9,6 +9,12 @@ FORMAT=$2
 # Récupération des données météo au format JSON
 curl -s "wttr.in/$VILLE?format=j1" -o meteo_brute.json
 
+if [ $? -ne 0 ]; then
+  TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+  echo "$TIMESTAMP - Erreur : Impossible de se connecter à wttr.in" >> meteo_error.log
+  exit 1
+fi
+
 # Extraction des données à l'aide de jq
 TEMP_ACTUELLE=$(jq -r '.current_condition[0].temp_C + "°C"' meteo_brute.json)
 TEMP_DEMAIN=$(jq -r '.weather[1].maxtempC + "°C"' meteo_brute.json)
