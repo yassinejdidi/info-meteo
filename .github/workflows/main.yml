@@ -1,0 +1,28 @@
+name: Executer le script tout les jours a 6h du matin
+
+on:
+  schedule:
+    - cron: '0 5 * * *'  # Tout les jours a 6 heure du matin(UTC+1)
+
+jobs:
+  run-extracteur-meteo:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout branche version2 
+        uses: actions/checkout@v3
+        with:
+          ref: version2  # Check out de la branche version2
+
+      - name: Test du fichier .sh
+        run: |
+          if [ ! -f ./Extracteur_Meteo.sh ]; then
+            echo "Extracteur_Meteo.sh not found in version2 branch" 
+            exit 1
+          fi
+
+      - name: Permissions Extracteur_Meteo.sh
+        run: chmod +x ./Extracteur_Meteo.sh
+
+      - name: Run Extracteur_Meteo 
+        run: ./Extracteur_Meteo.sh
