@@ -25,4 +25,4 @@ jobs:
         run: chmod +x ./Extracteur_Meteo.sh
 
       - name: Run Extracteur_Meteo 
-        run: ./Extracteur_Meteo.sh
+        run: ./Extracteur_Meteo.sh Toulouse
